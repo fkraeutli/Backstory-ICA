@@ -1,0 +1,45 @@
+@width: 30px;
+
+ul#vis {
+	
+	li {
+		
+//		list-style: none;
+		
+	}
+	
+	> li {
+		
+		width: @width;
+		display: inline-block;
+		
+		position: relative;
+		
+		ul {
+			
+			li {
+				
+				position: absolute;
+				font-size: 3px;
+				width: @width;
+				max-height: 10em;
+				overflow: hidden;
+				
+				-webkit-transition: all .3s;
+				
+			}
+			
+			li:hover {
+				
+				font-size: 10px;
+				width: 300px;
+				background: rgba( 255, 255, 255, 0.9 );
+				z-index: 10;
+				
+			}
+			
+		}
+		
+	}
+	
+}

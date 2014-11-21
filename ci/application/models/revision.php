@@ -43,6 +43,13 @@
 			
 		}
 		
+		function getByTimestamp( $timestamp ) {
+			
+			$this->db->where( "revision_timestamp", $timestamp );
+			
+			return $this->db->get( "revisions" )->row();
+			
+		}
 		function add( $data ) {
 			
 			$this->db->insert( "revisions", $data );

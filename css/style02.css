@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+ul#vis {
+  margin: 0;
+  padding: 0;
+}
+ul#vis > li {
+  width: 30px;
+  display: inline-block;
+  position: relative;
+}
+ul#vis > li ul li {
+  position: absolute;
+  width: 30px;
+  max-height: 10em;
+  -webkit-transition: all .3s;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+ul#vis > li ul li.collapsed {
+  width: 10px;
+  height: 10px;
+  background: teal;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+ul#vis > li ul li:hover {
+  font-size: 10px;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 10;
+}
+.hideText {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
