@@ -4,36 +4,77 @@ body {
 }
 ul#vis {
   margin: 0;
-  padding: 0;
+  padding: 0 100px;
 }
 ul#vis > li {
-  width: 30px;
-  display: inline-block;
+  list-style: none;
+  height: 1em;
+}
+ul#vis > li ul {
   position: relative;
 }
 ul#vis > li ul li {
-  position: absolute;
-  width: 30px;
-  max-height: 10em;
-  -webkit-transition: all .3s;
+  font-size: 3px;
+  display: inline-block;
+  overflow: hidden;
+}
+ul#vis > li ul li.active {
+  font-size: 14px;
+  width: 300px !important;
+  margin-left: -120px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  overflow: visible;
+}
+ul#vis > li ul li.active span {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -o-transition: all 1s;
+}
+ul#vis > li ul li.active .added {
+  font-size: 2em;
+}
+ul#vis > li ul li.active .removing {
+  font-size: 10em;
+  opacity: 0;
+  text-align: center;
+}
+ul#vis > li ul li::before {
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
+  content: ".";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(50%, rgba(255, 255, 255, 0)), color-stop(100%, #ffffff));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff', GradientType=0);
+  /* IE6-9 */
+
 }
-ul#vis > li ul li.collapsed {
-  width: 10px;
-  height: 10px;
-  background: teal;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-}
-ul#vis > li ul li:hover {
-  font-size: 10px;
-  width: 300px;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 10;
+ul#vis > li ul li:hover::before {
+  display: none;
 }
 .hideText {
   text-indent: 100%;
