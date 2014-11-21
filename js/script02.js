@@ -84,18 +84,26 @@ function makeVis() {
 		
 		paragraph: {
 			
-			mouseover: function(d) {
+			mouseover: function( d, i, element ) {
+				
 				
 				var prev = d3.select( "li.col-" + d.col + ".current" );
 				
+				
+				if ( ! element ) {
+					
+					element = this;
+					
+				}
+				
 				prev.classed( "current", false );
-				d3.select( this ).classed( "current", true );
+				d3.select( element ).classed( "current", true );
 				
 				if ( ! prev.empty() ) {
 					
 					var diffs = diffTexts( [ prev.datum().content, d.content ] )
 
-					d3.select( this ).html( "" ).selectAll("span")	
+					d3.select( element ).html( "" ).selectAll("span")	
 						.data( diffs[0], function(d) { return d.id; } )
 					.enter()
 						.append("span")
@@ -105,12 +113,26 @@ function makeVis() {
 						
 					})
 					
-					updateParagraph( diffs[1], d3.select( this ) );
+					updateParagraph( diffs[1], d3.select( element ) );
 					
 				}
 				
 			},
 			mouseout: function(d) {}
+			
+		},
+		
+		vis: {
+			
+			mousemove: function() {
+				
+				d3.selectAll( ".active" ).classed( "active", false );
+				
+				var element = d3.select( d3.event.toElement );
+				
+/* 				element.classed( "active", true ); */
+				
+			}
 			
 		}
 		
@@ -120,7 +142,8 @@ function makeVis() {
 		.domain( [ d3.min( dataset, function(d) { return d.revision_timestamp; } ), d3.max( dataset, function(d) { return d.revision_timestamp; } ) ] )
 		.range( [0, p.view.height ] ) ;
 	
-	var ul = d3.select( "body" ).append("ul").attr( "id", "vis" );
+	var ul = d3.select( "body" ).append("ul").attr( "id", "vis" )
+			;//.on("mousemove", behaviours.vis.mousemove );
 	
 	var li = ul.selectAll( "li" )
 		.data( revisions )
@@ -175,7 +198,7 @@ function makeVis() {
 				return 100 / paragraphs.length + "%";
 				
 			})
-			.on( "mousedown", behaviours.paragraph.mouseover )
+			.on( "mouseenter", behaviours.paragraph.mouseover )
 			.on( "mouseout", behaviours.paragraph.mouseout ) ;
 		
 	} )	
@@ -184,7 +207,6 @@ function makeVis() {
 			
 	
 }
-
 
 function updateParagraph( data, output ) {
 	
