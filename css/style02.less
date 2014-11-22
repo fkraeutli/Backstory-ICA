@@ -26,45 +26,16 @@ ul#vis {
 				
 				font-size: 3px;
 				display: inline-block;
-			//	max-height: 30px;
 				overflow: hidden;
-				//.transition();
 				
 			}
 			
-			li.active, li:hover {
+			li.active {
 				
-				font-size: 14px;
-				width: 300px !important;
-				margin-left: -120px;
-//				max-height: 300px;
-				z-index: 10;
-				background: rgba( 255, 255, 255, 0.8 );
-				overflow: visible;
-				
-				span {
-					
-					.transition( all, 1s );
-	
-					
-				}
-				
-				
-				.added {
-					
-					font-size: 2em;
-					
-				}
-				
-				.removing {
-					
-					font-size: 10em;
-					opacity: 0;
-					text-align: center;
-					
-				}
+				background: teal;
 				
 			}
+			
 			
 			li::before {
 				
@@ -78,15 +49,42 @@ ul#vis {
 				
 			}
 			
-			li:hover::before {
-				
-				display: none;
-				
-			}
-			
 		}
 		
 	}
+}
+
+#viewer {
+	
+	position: fixed;
+
+	z-index: 20;
+	pointer-events: none;
+	
+	top: 20%;
+	
+	span {
+					
+		.transition( all, 1s );
+
+		
+	}
+	
+	
+	.added {
+		
+		font-size: 2em;
+		
+	}
+	
+	.removing {
+		
+		font-size: 10em;
+		opacity: 0;
+		text-align: center;
+		
+	}
+	
 }
 
 .border-radius( @radius: 5px ) {

@@ -18,31 +18,8 @@ ul#vis > li ul li {
   display: inline-block;
   overflow: hidden;
 }
-ul#vis > li ul li.active,
-ul#vis > li ul li:hover {
-  font-size: 14px;
-  width: 300px !important;
-  margin-left: -120px;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.8);
-  overflow: visible;
-}
-ul#vis > li ul li.active span,
-ul#vis > li ul li:hover span {
-  transition: all 1s;
-  -webkit-transition: all 1s;
-  -moz-transition: all 1s;
-  -o-transition: all 1s;
-}
-ul#vis > li ul li.active .added,
-ul#vis > li ul li:hover .added {
-  font-size: 2em;
-}
-ul#vis > li ul li.active .removing,
-ul#vis > li ul li:hover .removing {
-  font-size: 10em;
-  opacity: 0;
-  text-align: center;
+ul#vis > li ul li.active {
+  background: teal;
 }
 ul#vis > li ul li::before {
   text-indent: 100%;
@@ -77,8 +54,25 @@ ul#vis > li ul li::before {
   /* IE6-9 */
 
 }
-ul#vis > li ul li:hover::before {
-  display: none;
+#viewer {
+  position: fixed;
+  z-index: 20;
+  pointer-events: none;
+  top: 20%;
+}
+#viewer span {
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -o-transition: all 1s;
+}
+#viewer .added {
+  font-size: 2em;
+}
+#viewer .removing {
+  font-size: 10em;
+  opacity: 0;
+  text-align: center;
 }
 .hideText {
   text-indent: 100%;

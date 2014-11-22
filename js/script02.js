@@ -64,7 +64,7 @@ function initDataset() {
 				
 				paragraphs[ i - 1 ].push( obj );
 				
-				revisions[ revisions.length - 1 ].data.push( d[ "p" + i ] != "" ? { row: index, col: i, content: d[ "p" + i ] } : false );
+				revisions[ revisions.length - 1 ].data.push( d[ "p" + i ] != "" ? { revision: d.revision_id, row: index, col: i, content: d[ "p" + i ] } : false );
 				
 			}
 			
@@ -82,55 +82,28 @@ function makeVis() {
 	
 	var behaviours = {
 		
-		paragraph: {
-			
-			mouseover: function( d, i, element ) {
-				
-				
-				var prev = d3.select( "li.col-" + d.col + ".current" );
-				
-				
-				if ( ! element ) {
-					
-					element = this;
-					
-				}
-				
-				prev.classed( "current", false );
-				d3.select( element ).classed( "current", true );
-				
-				if ( ! prev.empty() ) {
-					
-					var diffs = diffTexts( [ prev.datum().content, d.content ] )
-
-					d3.select( element ).html( "" ).selectAll("span")	
-						.data( diffs[0], function(d) { return d.id; } )
-					.enter()
-						.append("span")
-						.html( function(d) {
-					
-						return d.text + " ";
-						
-					})
-					
-					updateParagraph( diffs[1], d3.select( element ) );
-					
-				}
-				
-			},
-			mouseout: function(d) {}
-			
-		},
 		
 		vis: {
 			
 			mousemove: function() {
 				
-				d3.selectAll( ".active" ).classed( "active", false );
+				var prev = d3.select( ".active" );
+				var current = d3.select( d3.event.toElement );
 				
-				var element = d3.select( d3.event.toElement );
-				
-/* 				element.classed( "active", true ); */
+				if ( current.classed( "paragraph" ) ) {
+					
+					d3.selectAll( ".paragraph.active" ).classed( "active", false );
+					current.classed( "active", true );
+					
+					if ( ! prev.empty()  && current.attr( "id" ) != prev.attr( "id" ) ) {
+						
+						TEST_current = current;
+						
+						updateViewer( current );
+						
+					}
+					
+				}
 				
 			}
 			
@@ -143,7 +116,7 @@ function makeVis() {
 		.range( [0, p.view.height ] ) ;
 	
 	var ul = d3.select( "body" ).append("ul").attr( "id", "vis" )
-			;//.on("mousemove", behaviours.vis.mousemove );
+			.on("mousemove", behaviours.vis.mousemove );
 	
 	var li = ul.selectAll( "li" )
 		.data( revisions )
@@ -177,9 +150,14 @@ function makeVis() {
 			.data( d.data )
 		.enter()
 			.append( "li" )
+			.attr( "id", function( d) {
+				
+				return d.revision + "-" + d.row + "-" + d.col;
+				
+			} )
 			.attr( "class", function( d) {
 				
-				return "row-" + d.row + " col-" + d.col;
+				return "paragraph row-" + d.row + " col-" + d.col;
 				
 			} )
 			.html( function(d) {
@@ -198,9 +176,7 @@ function makeVis() {
 				return 100 / paragraphs.length + "%";
 				
 			})
-			.on( "mouseenter", behaviours.paragraph.mouseover )
-			.on( "mouseout", behaviours.paragraph.mouseout ) ;
-		
+			.on( "click", function(d) { alert( d.revision + " col " + d.col + " row " + d.row ) } );;		
 	} )	
 	
 	
@@ -208,7 +184,7 @@ function makeVis() {
 	
 }
 
-function updateParagraph( data, output ) {
+function updateViewer( element  ) {
 	
 	function storePositions( prefix ) {
 		
@@ -218,7 +194,7 @@ function updateParagraph( data, output ) {
 			
 		}
 		
-		$j("span", output[0] ).each( function(d) {
+		$j("#viewer span" ).each( function(d) {
 			
 			var pos = $j(this).position();
 			
@@ -229,55 +205,93 @@ function updateParagraph( data, output ) {
 		
 	}
 	
-	var transition_duration = 500;
+	function initElement() {
 	
-	var dataUpdate = output.selectAll("span")	
-		.data( data, function(d) { return d.id } );
+		var d = element.datum();
+		var prev = d3.select( "li.col-" + d.col + ".current" );
 		
-	var dataEnter = dataUpdate.enter();
-	var dataExit = dataUpdate.exit();
+		prev.classed( "current", false );
+		element.classed( "current", true );
 	
-	storePositions("old");
+		if ( ! prev.empty() ) {
+			
+			var diffs = diffTexts( [ prev.datum().content, d.content ] )
 	
-	dataUpdate.classed("added", false)
-		.classed("old", true);
+			d3.select( "#viewer" ).html( "" ).selectAll("span")	
+				.data( diffs[0], function(d) { return d.id; } )
+			.enter()
+				.append("span")
+				.html( function(d) {
+			
+				return d.text + " ";
+				
+			})
+			
+			doUpdate( diffs[1] );
+			
+		} else {
+			
+			d3.select( "#viewer" ).html( d.content );
+			
+		}
+
+	}
+	
+	function doUpdate( data ) {
 		
-	var entered = dataEnter.append("span")
-		.classed( "added", true )
-		.html( function(d) {
+		var output = d3.select( "#viewer" );
+		var transition_duration = 500;
 		
-			return d.text + " ";
+		var dataUpdate = output.selectAll("span")	
+			.data( data, function(d) { return d.id } );
+			
+		var dataEnter = dataUpdate.enter();
+		var dataExit = dataUpdate.exit();
+		
+		storePositions("old");
+		
+		dataUpdate.classed("added", false)
+			.classed("old", true);
+			
+		var entered = dataEnter.append("span")
+			.classed( "added", true )
+			.html( function(d) {
+			
+				return d.text + " ";
+				
+			})
+		
+		dataExit.classed("remove", true)
+			.style("display", "none");
+		
+		output.selectAll("span").sort( function (a, b) {
+			
+			return a.currentPos - b.currentPos;
+			
+		});
+		
+		$j( "span.remove", output[0] ).each(function() {
+			
+			$j(this).css("position", "absolute")
+				.css( "top", $j(this).attr("data-pos-old-top") + "px" )
+				.css( "left", $j(this).attr("data-pos-old-left") + "px" );
+			
+			var el = $j(this);
+			
+			window.setTimeout( function() {
+	
+			   el.addClass("removing");
+	
+			}, 100);
 			
 		})
+		
+		dataExit.style("display", "")
+			.transition()
+			.duration(transition_duration)
+			.remove();
+	}
 	
-	dataExit.classed("remove", true)
-		.style("display", "none");
-	
-	output.selectAll("span").sort( function (a, b) {
-		
-		return a.currentPos - b.currentPos;
-		
-	});
-	
-	$j( "span.remove", output[0] ).each(function() {
-		
-		$j(this).css("position", "absolute")
-			.css( "top", $j(this).attr("data-pos-old-top") + "px" )
-			.css( "left", $j(this).attr("data-pos-old-left") + "px" );
-		
-		var el = $j(this);
-		
-		window.setTimeout( function() {
-
-		   el.addClass("removing");
-
-		}, 100);
-		
-	})
-	
-	dataExit.style("display", "")
-		.transition()
-		.duration(transition_duration)
-		.remove();
+	initElement();
 
 }
