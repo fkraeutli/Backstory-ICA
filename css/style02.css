@@ -8,10 +8,14 @@ ul#vis {
 }
 ul#vis > li {
   list-style: none;
-  height: 1em;
+  width: 3%;
+  display: inline-block;
+  position: relative;
+  word-break: break-word;
 }
 ul#vis > li ul {
   position: relative;
+  width: 100%;
 }
 ul#vis > li ul li {
   font-size: 3px;
@@ -54,22 +58,30 @@ ul#vis > li ul li::before {
   /* IE6-9 */
 
 }
-#viewer {
+#viewer_container {
   position: fixed;
-  z-index: 20;
+  width: 100%;
+  height: 100%;
+  display: table;
   pointer-events: none;
-  top: 20%;
+  z-index: 20;
 }
-#viewer span {
+#viewer_container #viewer {
+  pointer-events: none;
+  display: table-cell;
+  vertical-align: middle;
+  padding: 1em;
+}
+#viewer_container #viewer span {
   transition: all 1s;
   -webkit-transition: all 1s;
   -moz-transition: all 1s;
   -o-transition: all 1s;
 }
-#viewer .added {
+#viewer_container #viewer .added {
   font-size: 2em;
 }
-#viewer .removing {
+#viewer_container #viewer .removing {
   font-size: 10em;
   opacity: 0;
   text-align: center;

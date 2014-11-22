@@ -7,7 +7,8 @@ p = {
 	view: {
 		
 		width: 800,
-		height: 600
+		height: 4600,
+		paragraphHeight: 40
 		
 	}	
 	
@@ -50,19 +51,24 @@ function initDataset() {
 				
 				if ( ! paragraphs[ i - 1 ] ) {
 					
-					paragraphs[ i - 1 ] = Array();
+					paragraphs[ i - 1 ] = {
+						id: d.revision_id,
+						data: []
+					};
 					
 				}
 				
 				var obj = {
 					
-					revision_id: d.revision_id,
-					revision_timestamp: d.revision_timestamp,
-					revision_paragraph: d[ "p" + i ]
+					revision: d.revision_id,
+					timestamp: d.revision_timestamp,
+					content: d[ "p" + i ],
+					row: index,
+					col: i
 					
 				}
 				
-				paragraphs[ i - 1 ].push( obj );
+				paragraphs[ i - 1 ].data.push( obj );
 				
 				revisions[ revisions.length - 1 ].data.push( d[ "p" + i ] != "" ? { revision: d.revision_id, row: index, col: i, content: d[ "p" + i ] } : false );
 				
@@ -74,14 +80,15 @@ function initDataset() {
 		
 	} )
 	
+	p.view.height = revisions.length * p.view.paragraphHeight;
+	
 	makeVis();
 	
 }
 
 function makeVis() {
 	
-	var behaviours = {
-		
+	var behaviours = {	
 		
 		vis: {
 			
@@ -97,11 +104,9 @@ function makeVis() {
 					
 					if ( ! prev.empty()  && current.attr( "id" ) != prev.attr( "id" ) ) {
 						
-						TEST_current = current;
-						
 						updateViewer( current );
 						
-					}
+					} 
 					
 				}
 				
@@ -119,31 +124,23 @@ function makeVis() {
 			.on("mousemove", behaviours.vis.mousemove );
 	
 	var li = ul.selectAll( "li" )
-		.data( revisions )
+		.data( paragraphs )
 	.enter()
 		.append( "li" )
 		.attr( "class", function( d, i ) {
 		
-			return "row-" + i;	
+			return "col-" + i;	
 			
 		})
-		.style( "margin-top", function( d, i ) {
+		.style( "width", function() {
 			
-			if ( i == 0) {
-				
-				return 0;
-				
-			} else {
-				
-				var diff = scale( revisions[ i ].timestamp ) - scale( revisions[ i - 1 ].timestamp );
-				
-				return diff + "px";
-				
-			}
+			return 100 / paragraphs.length + "%";
 			
-		} )
+		})
+	
 	
 	li.each( function(d) {
+		
 		
 		d3.select( this ).append( "ul" )
 			.selectAll( "li" )
@@ -159,26 +156,22 @@ function makeVis() {
 				
 				return "paragraph row-" + d.row + " col-" + d.col;
 				
-			} )
+			} )		
 			.html( function(d) {
 				
 				return d.content 
 				
-			} )
+			} )		
 			.style( "position", "absolute" )
-			.style( "left", function( d, i ) {
+			.style( "top", function( d, i ) {
 				
-				return 100 / paragraphs.length * d.col + "%";
+				return scale( d.timestamp ) + "px";
+					
 				
 			} )
-			.style( "width", function() {
-				
-				return 100 / paragraphs.length + "%";
-				
-			})
-			.on( "click", function(d) { alert( d.revision + " col " + d.col + " row " + d.row ) } );;		
+			.on( "click", function(d) { alert( d.revision + " col " + String.fromCharCode(97 + d.col + 1 ) + " row " + ( d.row + 2) ) } );;	
+
 	} )	
-	
 	
 			
 	
@@ -229,11 +222,7 @@ function updateViewer( element  ) {
 			
 			doUpdate( diffs[1] );
 			
-		} else {
-			
-			d3.select( "#viewer" ).html( d.content );
-			
-		}
+		} 
 
 	}
 	
