@@ -4,15 +4,21 @@ $j = jQuery.noConflict();
 
 p = {
 	
+	containerID: "backstory",
+	
+	scale: {},
+	
 	view: {
 		
+		padding: 100,
 		width: 800,
-		height: 4600,
-		paragraphHeight: 40
+		paragraphHeight: 30
 		
 	}	
 	
 };
+
+TEST_p = p;
 
 d3.csv( "data/condoms.csv", function(d) {
 
@@ -81,13 +87,23 @@ function initDataset() {
 	} )
 	
 	p.view.height = revisions.length * p.view.paragraphHeight;
-	$j( "body, html" ).height( p.view.height + "px" );
 	
-	makeVis();
+	p.container = d3.select( "#" + p.containerID )
+		.append("div")
+		.attr("id", p.containerID + "_container");
+		
+	p.container.append( "div" )
+		.attr( "id", "time_indicator" )
+	.append( "span" )
+		.attr( "class", "time" );
+	
+	p.container.style( "height", p.view.height + p.view.padding * 10 + "px" );
+	
+	build();
 	
 }
 
-function makeVis() {
+function build() {
 	
 	var behaviours = {	
 		
@@ -95,20 +111,53 @@ function makeVis() {
 			
 			mousemove: function() {
 				
-				var prev = d3.select( ".active" );
 				var current = d3.select( d3.event.toElement );
 				
-				if ( current.classed( "paragraph" ) ) {
-					
-					d3.selectAll( ".paragraph.active" ).classed( "active", false );
+				if ( current.classed( "column" ) ) {
+	
+					d3.selectAll( ".column.active" ).classed( "active", false );
 					current.classed( "active", true );
 					
-					if ( ! prev.empty()  && current.attr( "id" ) != prev.attr( "id" ) ) {
+										
+				}
+				
+				var y = $j( "#" + p.containerID ).scrollTop(),
+					found = false;	
+					
+				console.log ( "doing" );
+				
+				d3.selectAll( ".column.active li" ).each( function( d, i ) {
+					
+					if ( ! found ) {
 						
-						updateViewer( current );
+						if ( d.top > y + p.view.padding * 2 ) {
+							
+							found = d3.select( this );
+							
+						}
+						
+					}
+					
+				} )
+				
+				
+				if ( found ) {
+					
+					var prev = d3.select( ".paragraph.active" );
+					
+					d3.selectAll( ".paragraph.active" ).classed( "active", false );
+					found.classed( "active", true );
+					
+					if ( ! prev.empty()  && found.attr( "id" ) != prev.attr( "id" ) ) {
+						
+						d3.select( "#time_indicator")
+							.style( "top", found.datum().top + "px" )
+						.select( ".time" )
+							.html( found.datum().timestamp.getFullYear() + "/" + ( found.datum().timestamp.getMonth() + 1 ) + "/" + found.datum().timestamp.getDate() + " " + found.datum().timestamp.getHours() + ":" + found.datum().timestamp.getMinutes() );
+							
+						updateViewer( found );
 						
 					} 
-					
 				}
 				
 			}
@@ -117,12 +166,22 @@ function makeVis() {
 		
 	};
 	
-	var scale = d3.scale.linear()
+	p.scale.timeToPx = d3.scale.linear()
 		.domain( [ d3.min( dataset, function(d) { return d.revision_timestamp; } ), d3.max( dataset, function(d) { return d.revision_timestamp; } ) ] )
 		.range( [0, p.view.height ] ) ;
+		
+	p.scale.pxToTime = d3.scale.linear()
+		.domain( [0, p.view.height ] )
+		.range( [ d3.min( dataset, function(d) { return d.revision_timestamp; } ), d3.max( dataset, function(d) { return d.revision_timestamp; } ) ] ) ;
 	
-	var ul = d3.select( "body" ).append("ul").attr( "id", "vis" )
+	var ul = p.container.append("ul").attr( "id", "vis" )
 			.on("mousemove", behaviours.vis.mousemove );
+			
+	d3.select( "#" + p.containerID ).on( "mousewheel", function() {
+
+		$j( "#vis" ).trigger( "mousemove" )		
+		
+	} );
 	
 	var li = ul.selectAll( "li" )
 		.data( paragraphs )
@@ -130,9 +189,14 @@ function makeVis() {
 		.append( "li" )
 		.attr( "class", function( d, i ) {
 		
-			return "col-" + i;	
+			return "column col-" + i;	
 			
 		})
+		.attr( "data-column", function( d, i ) {
+			
+			return i;
+			
+		} )
 		.style( "width", function() {
 			
 			return 100 / paragraphs.length + "%";
@@ -166,7 +230,15 @@ function makeVis() {
 			.style( "position", "absolute" )
 			.style( "top", function( d, i ) {
 				
-				return scale( d.timestamp ) + "px";
+				d.top = p.scale.timeToPx( d.timestamp ) + p.view.padding;
+				
+				return d.top + "px";
+					
+				
+			} )
+			.attr( "data-top", function( d, i ) {
+				
+				return Math.floor( p.scale.timeToPx( d.timestamp ) );
 					
 				
 			} )
@@ -188,7 +260,7 @@ function makeVis() {
 	
 }
 
-function updateViewer( element  ) {
+function updateViewer( element ) {
 	
 	function storePositions( prefix ) {
 		
@@ -233,7 +305,11 @@ function updateViewer( element  ) {
 			
 			doUpdate( diffs[1] );
 			
-		} 
+		} else {
+			
+			d3.select( "#viewer" ).html( d.content );
+			
+		}
 
 	}
 	
@@ -292,6 +368,8 @@ function updateViewer( element  ) {
 			.remove();
 	}
 	
+	
 	initElement();
+
 
 }

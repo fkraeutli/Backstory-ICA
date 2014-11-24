@@ -1,17 +1,36 @@
+@font-face {
+  font-family: "Blonde";
+  src: url("../fonts/blonde_regular-webfont-f6c95369443500620fe0840d4243cadc.woff") format('woff');
+}
+body,
+html {
+  height: 100%;
+  font-family: "Blonde", Helvetica, sans;
+}
 body {
   margin: 0;
   padding: 0;
 }
-ul {
+#backstory {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+#backstory #backstory_container {
+  position: relative;
+}
+#backstory ul {
   margin: 0;
   padding: 0;
 }
-ul#vis {
+#backstory ul#vis {
+  font-family: "Times New Roman", times, serif;
   margin: 0;
   padding: 0 100px;
   height: 100%;
+  cursor: none;
 }
-ul#vis > li {
+#backstory ul#vis > li {
   list-style: none;
   width: 3%;
   display: inline-block;
@@ -19,19 +38,17 @@ ul#vis > li {
   word-break: break-word;
   height: 100%;
 }
-ul#vis > li ul {
+#backstory ul#vis > li ul {
   position: relative;
   width: 100%;
 }
-ul#vis > li ul li {
+#backstory ul#vis > li ul li {
   font-size: 3px;
   display: inline-block;
   overflow: hidden;
+  pointer-events: none;
 }
-ul#vis > li ul li.active {
-  background: teal;
-}
-ul#vis > li ul li::before {
+#backstory ul#vis > li ul li::before {
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -60,11 +77,58 @@ ul#vis > li ul li::before {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, #ffffff 100%);
   /* W3C */
 
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@from', endColorstr='@to', GradientType=0);
   /* IE6-9 */
 
 }
-#viewer_container {
+#backstory ul#vis > li.active {
+  background: #f69296;
+}
+#backstory ul#vis > li.active li::before {
+  background: -moz-linear-gradient(top, rgba(246, 146, 150, 0) 0%, rgba(246, 146, 150, 0) 50%, #f69296 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(246, 146, 150, 0)), color-stop(50%, rgba(246, 146, 150, 0)), color-stop(100%, #f69296));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, rgba(246, 146, 150, 0) 0%, rgba(246, 146, 150, 0) 50%, #f69296 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, rgba(246, 146, 150, 0) 0%, rgba(246, 146, 150, 0) 50%, #f69296 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, rgba(246, 146, 150, 0) 0%, rgba(246, 146, 150, 0) 50%, #f69296 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, rgba(246, 146, 150, 0) 0%, rgba(246, 146, 150, 0) 50%, #f69296 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@from', endColorstr='@to', GradientType=0);
+  /* IE6-9 */
+
+}
+#backstory ul#vis > li.active .current {
+  background: #ed1c24;
+}
+#backstory #time_indicator {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+}
+#backstory #time_indicator .time {
+  float: right;
+  position: relative;
+  top: -1em;
+  margin-right: 1em;
+}
+#backstory #viewer_container {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -72,26 +136,28 @@ ul#vis > li ul li::before {
   pointer-events: none;
   z-index: 20;
 }
-#viewer_container #viewer {
+#backstory #viewer_container #viewer {
+  font-family: "Times New Roman", times, serif;
   pointer-events: none;
   display: table-cell;
   vertical-align: middle;
   padding: 1em;
 }
-#viewer_container #viewer span {
+#backstory #viewer_container #viewer span {
   transition: all 1s;
   -webkit-transition: all 1s;
   -moz-transition: all 1s;
   -o-transition: all 1s;
 }
-#viewer_container #viewer .added {
+#backstory #viewer_container #viewer .added {
   font-size: 2em;
 }
-#viewer_container #viewer .removing {
+#backstory #viewer_container #viewer .removing {
   font-size: 10em;
   opacity: 0;
   text-align: center;
 }
+/* --- Mixins --- */
 .hideText {
   text-indent: 100%;
   white-space: nowrap;
