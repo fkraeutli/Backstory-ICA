@@ -109,7 +109,7 @@ function build() {
 		
 		vis: {
 			
-			mousemove: function() {
+			mousemoveD3: function() {
 				
 				var current = d3.select( d3.event.toElement );
 				
@@ -160,6 +160,64 @@ function build() {
 					} 
 				}
 				
+			},
+			
+			mousemoveJQ: function( e ) {
+				
+				var current = $j( e.target );
+				
+				if ( current.hasClass( "column") ) {
+					
+					$j( ".column.active" ).removeClass( "active" );
+					current.addClass( "active" );
+					
+				}
+				
+				var y = $j( "#" + p.containerID ).scrollTop(),
+					found = false;
+
+				console.log ( "doing" );
+				
+				var lis = $j( ".column.active li");
+				
+				for( var i = 0; i < lis.length; i++ ) {
+					
+					var top = +lis.eq( i ).attr( "data-top" );
+					
+					if ( top > y + p.view.padding * 2 ) {
+					
+						found = lis.eq( i );
+						break;	
+						
+					}
+					
+				}			
+				
+				if ( found ) {
+					
+					var prev = d3.select( ".paragraph.active" )
+					
+					found = d3.select( "#" + found.attr("id") );
+					
+					d3.selectAll( ".paragraph.active" ).classed( "active", false );
+					found.classed( "active", true );
+					
+					console.log( prev.attr("id") );
+					
+					if ( ! prev.empty()  && found.attr( "id" ) != prev.attr( "id" ) ) {
+
+						
+						d3.select( "#time_indicator")
+							.style( "top", found.datum().top + "px" )
+						.select( ".time" )
+							.html( found.datum().timestamp.getFullYear() + "/" + ( found.datum().timestamp.getMonth() + 1 ) + "/" + found.datum().timestamp.getDate() + " " + found.datum().timestamp.getHours() + ":" + found.datum().timestamp.getMinutes() );
+							
+						updateViewer( found );
+						
+					} 
+					
+				}	
+				
 			}
 			
 		}
@@ -175,11 +233,16 @@ function build() {
 		.range( [ d3.min( dataset, function(d) { return d.revision_timestamp; } ), d3.max( dataset, function(d) { return d.revision_timestamp; } ) ] ) ;
 	
 	var ul = p.container.append("ul").attr( "id", "vis" )
-			.on("mousemove", behaviours.vis.mousemove );
+	//		.on("mousemove", behaviours.vis.mousemoveD3 );
+
+	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
+
 			
 	d3.select( "#" + p.containerID ).on( "mousewheel", function() {
 
-		$j( "#vis" ).trigger( "mousemove" )		
+		$j( "#vis" ).trigger( "mousemove" );
+		
+		// maybe change behaviour all to jquery
 		
 	} );
 	
@@ -214,7 +277,7 @@ function build() {
 			.append( "li" )
 			.attr( "id", function( d) {
 				
-				return d.revision + "-" + d.row + "-" + d.col;
+				return "paragraph-" + d.revision + "-" + d.row + "-" + d.col;
 				
 			} )
 			.attr( "class", function( d) {
