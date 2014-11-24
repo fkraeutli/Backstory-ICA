@@ -174,10 +174,8 @@ function build() {
 				}
 				
 				var y = $j( "#" + p.containerID ).scrollTop(),
-					found = false;
+					found = $j( ".column.active li:last");
 
-				console.log ( "doing" );
-				
 				var lis = $j( ".column.active li");
 				
 				for( var i = 0; i < lis.length; i++ ) {
@@ -202,11 +200,8 @@ function build() {
 					d3.selectAll( ".paragraph.active" ).classed( "active", false );
 					found.classed( "active", true );
 					
-					console.log( prev.attr("id") );
-					
 					if ( ! prev.empty()  && found.attr( "id" ) != prev.attr( "id" ) ) {
 
-						
 						d3.select( "#time_indicator")
 							.style( "top", found.datum().top + "px" )
 						.select( ".time" )
@@ -236,13 +231,10 @@ function build() {
 	//		.on("mousemove", behaviours.vis.mousemoveD3 );
 
 	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
-
 			
 	d3.select( "#" + p.containerID ).on( "mousewheel", function() {
 
 		$j( "#vis" ).trigger( "mousemove" );
-		
-		// maybe change behaviour all to jquery
 		
 	} );
 	
@@ -430,7 +422,6 @@ function updateViewer( element ) {
 			.duration(transition_duration)
 			.remove();
 	}
-	
 	
 	initElement();
 
