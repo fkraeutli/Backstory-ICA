@@ -81,6 +81,7 @@ function initDataset() {
 	} )
 	
 	p.view.height = revisions.length * p.view.paragraphHeight;
+	$j( "body, html" ).height( p.view.height + "px" );
 	
 	makeVis();
 	
@@ -169,7 +170,17 @@ function makeVis() {
 					
 				
 			} )
-			.on( "click", function(d) { alert( d.revision + " col " + String.fromCharCode(97 + d.col + 1 ) + " row " + ( d.row + 2) ) } );;	
+			.on( "click", function(d) { 
+			
+				var obj = dataset.filter( function(ds) { return ds.revision_id == d.revision; } )[ 0 ];
+				
+				obj[ "p" + d.col ] = ""; 
+				
+				console.log ( "ok" );
+				
+				d3.select( this ).style( "background", "red" );
+			
+			} );;	
 
 	} )	
 	
