@@ -14,7 +14,9 @@ p = {
 		width: 800,
 		paragraphHeight: 30
 		
-	}	
+	},
+	
+	viewerID: "viewer_content"	
 	
 };
 
@@ -325,7 +327,7 @@ function updateViewer( element ) {
 			
 		}
 		
-		$j("#viewer span" ).each( function(d) {
+		$j( p.viewerID + " span" ).each( function(d) {
 			
 			var pos = $j(this).position();
 			
@@ -348,7 +350,7 @@ function updateViewer( element ) {
 			
 			var diffs = diffTexts( [ prev.datum().content, d.content ] )
 	
-			d3.select( "#viewer" ).html( "" ).selectAll("span")	
+			d3.select( "#" + p.viewerID ).html( "" ).selectAll("span")	
 				.data( diffs[0], function(d) { return d.id; } )
 			.enter()
 				.append("span")
@@ -362,7 +364,7 @@ function updateViewer( element ) {
 			
 		} else {
 			
-			d3.select( "#viewer" ).html( d.content );
+			d3.select( "#" + p.viewerID ).html( d.content );
 			
 		}
 
@@ -370,7 +372,7 @@ function updateViewer( element ) {
 	
 	function doUpdate( data ) {
 		
-		var output = d3.select( "#viewer" );
+		var output = d3.select( "#" + p.viewerID );
 		var transition_duration = 500;
 		
 		var dataUpdate = output.selectAll("span")	
