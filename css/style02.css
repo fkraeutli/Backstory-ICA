@@ -137,11 +137,13 @@ body {
   z-index: 20;
 }
 #backstory #viewer_container #viewer {
-  font-family: "Times New Roman", times, serif;
+  /* 			font-family: "Times New Roman", times, serif; */
+
   pointer-events: none;
   display: table-cell;
   vertical-align: middle;
-  padding: 1em;
+  max-width: 800px;
+  padding: 20px;
 }
 #backstory #viewer_container #viewer span {
   transition: all 1s;
@@ -156,6 +158,10 @@ body {
   font-size: 10em;
   opacity: 0;
   text-align: center;
+}
+#backstory #viewer_container #viewer_content {
+  margin: auto;
+  max-width: 1200px;
 }
 /* --- Mixins --- */
 .hideText {
