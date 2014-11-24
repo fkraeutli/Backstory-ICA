@@ -28,7 +28,8 @@ body {
   margin: 0;
   padding: 0 100px;
   height: 100%;
-  cursor: none;
+  /* 		cursor: none; */
+
 }
 #backstory ul#vis > li {
   list-style: none;

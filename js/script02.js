@@ -22,7 +22,7 @@ p = {
 
 TEST_p = p;
 
-d3.csv( "data/condoms.csv", function(d) {
+d3.json( "data/condoms.json", function(d) {
 
 	dataset = d;
 	
@@ -184,7 +184,7 @@ function build() {
 					
 					var top = +lis.eq( i ).attr( "data-top" );
 					
-					if ( top > y + p.view.padding * 2 ) {
+					if ( top >= y  ) {//+ p.view.padding * 2 ) {
 					
 						found = lis.eq( i );
 						break;	
@@ -230,7 +230,23 @@ function build() {
 		.range( [ d3.min( dataset, function(d) { return d.revision_timestamp; } ), d3.max( dataset, function(d) { return d.revision_timestamp; } ) ] ) ;
 	
 	var ul = p.container.append("ul").attr( "id", "vis" )
-	//		.on("mousemove", behaviours.vis.mousemoveD3 );
+	
+	/*		/// DEBUG
+			.on( "click", function() { 
+			
+				d = d3.select(".active .active").datum()
+			
+				var obj = dataset.filter( function(ds) { return ds.revision_id == d.revision; } )[ 0 ];
+				
+				obj[ "p" + d.col ] = ""; 
+				
+				console.log ( "ok" );
+				
+				d3.select( ".active .active" ).style( "background", "blue" );
+			
+			} );;	
+			
+	*/
 
 	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
 			
@@ -261,8 +277,7 @@ function build() {
 		})
 	
 	
-	li.each( function(d) {
-		
+	li.each( function(d,i) {
 		
 		d3.select( this ).append( "ul" )
 			.selectAll( "li" )
@@ -299,17 +314,6 @@ function build() {
 					
 				
 			} )
-			.on( "click", function(d) { 
-			
-				var obj = dataset.filter( function(ds) { return ds.revision_id == d.revision; } )[ 0 ];
-				
-				obj[ "p" + d.col ] = ""; 
-				
-				console.log ( "ok" );
-				
-				d3.select( this ).style( "background", "red" );
-			
-			} );;	
 
 	} )	
 	
