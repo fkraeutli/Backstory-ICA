@@ -168,6 +168,10 @@ body {
   margin: auto;
   max-width: 1200px;
 }
+#backstory #viewer_container #viewer_content em {
+  font-style: normal;
+  color: #ed1c24;
+}
 /* --- Mixins --- */
 .hideText {
   text-indent: 100%;

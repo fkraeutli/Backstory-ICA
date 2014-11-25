@@ -1,7 +1,6 @@
 
 
 
-@colActive: rgb(255,100,100);
 @colActiveOp0: rgba(246,146,150,0);
 @colCurrent: rgb(237, 28, 36);
 @colActive: lighten( @colCurrent, 25% );
@@ -199,6 +198,12 @@ body {
 			margin: auto;
 			max-width: 1200px;
 			
+			em {
+				
+				font-style: normal;
+				color: @colCurrent;
+			}
+			
 		}
 	
 	}
@@ -257,5 +262,14 @@ body {
 	-webkit-transition: @property @duration;
 	-moz-transition: @property @duration;
 	-o-transition: @property @duration;
+	
+}
+
+.text-shadow() {
+	
+	text-shadow: 0px 0px 1px black;
+	-moz-text-shadow: 0px 0px 1px black;
+	-o-text-shadow: 0px 0px 1px black;
+	-webkit-text-shadow: 0px 0px 1px black;
 	
 }
