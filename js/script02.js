@@ -24,7 +24,7 @@ p = {
 
 TEST_p = p;
 
-load();
+load( "safesex" );
 
 function load( which ) {
 	
@@ -37,7 +37,7 @@ function load( which ) {
 		
 	}
 	
-	d3.json( "data/" + which + ".json", function(d) {
+	d3.csv( "data/" + which + ".csv", function(d) {
 	
 		dataset = d;
 		
