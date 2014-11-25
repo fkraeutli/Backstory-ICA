@@ -24,11 +24,12 @@ p = {
 
 TEST_p = p;
 
-load( "viralload" );
+load();
 
 function load( which ) {
 	
-	$j( "#vis" ).remove();
+	$j( "#" + p.containerID + "_container" ).remove();
+	$j( "#" + p.viewerID ).html( "" );
 	
 	if ( ! which ) {
 		
