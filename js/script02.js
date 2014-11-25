@@ -37,7 +37,7 @@ function load( which ) {
 		
 	}
 	
-	d3.csv( "data/" + which + ".csv", function(d) {
+	d3.json( "data/" + which + ".json", function(d) {
 	
 		dataset = d;
 		
