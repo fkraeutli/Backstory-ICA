@@ -24,7 +24,8 @@ body {
   padding: 0;
 }
 #backstory ul#vis {
-  font-family: "Times New Roman", times, serif;
+  /* 		font-family: "Times New Roman", times, serif; */
+
   margin: 0;
   padding: 0 100px;
   height: 100%;
@@ -44,7 +45,7 @@ body {
   width: 100%;
 }
 #backstory ul#vis > li ul li {
-  font-size: 3px;
+  font-size: 4px;
   display: inline-block;
   overflow: hidden;
   pointer-events: none;
@@ -135,7 +136,10 @@ body {
   height: 100%;
   display: table;
   pointer-events: none;
+  -ms-touch-action: none;
   z-index: 20;
+  top: 0;
+  left: 0;
 }
 #backstory #viewer_container #viewer {
   /* 			font-family: "Times New Roman", times, serif; */

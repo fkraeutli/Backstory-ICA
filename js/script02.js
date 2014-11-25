@@ -1,5 +1,7 @@
 var dataset, paragraphs, revisions;
 
+var isIE = ( window.navigator.userAgent.indexOf( "MSIE") != -1 );
+
 $j = jQuery.noConflict();
 
 p = {
@@ -22,21 +24,34 @@ p = {
 
 TEST_p = p;
 
-d3.json( "data/condoms.json", function(d) {
+load( "viralload" );
 
-	dataset = d;
+function load( which ) {
 	
-	dataset.forEach( function(d) {
+	$j( "#vis" ).remove();
+	
+	if ( ! which ) {
 		
-		d.revision_id = parseInt( d.revision_id );
-		d.revision_timestamp = new Date( d.revision_timestamp );
+		which = "condoms";
 		
+	}
+	
+	d3.json( "data/" + which + ".json", function(d) {
+	
+		dataset = d;
+		
+		dataset.forEach( function(d) {
+			
+			d.revision_id = parseInt( d.revision_id );
+			d.revision_timestamp = new Date( d.revision_timestamp );
+			
+		} );
+		
+		initDataset();
+			
 	} );
 	
-	initDataset();
-		
-} );
-
+}
 
 function initDataset() {
 	
@@ -125,8 +140,6 @@ function build() {
 				
 				var y = $j( "#" + p.containerID ).scrollTop(),
 					found = false;	
-					
-				console.log ( "doing" );
 				
 				d3.selectAll( ".column.active li" ).each( function( d, i ) {
 					
@@ -175,6 +188,15 @@ function build() {
 					
 				}
 				
+				// IE
+				if ( isIE && e.target && e.target.__data__ && e.target.__data__.col) {
+					current = $j( ".column.col-" + ( e.target.__data__.col - 1 ) );
+					$j( ".column.active" ).removeClass( "active" );
+					current.addClass( "active" );
+					
+				}
+				
+				
 				var y = $j( "#" + p.containerID ).scrollTop(),
 					found = $j( ".column.active li:last");
 
@@ -215,7 +237,13 @@ function build() {
 					
 				}	
 				
-			}
+			},
+			
+			mousewheel: function() {
+	
+				$j( "#vis" ).trigger( "mousemove" );
+			
+			} 
 			
 		}
 		
@@ -231,7 +259,7 @@ function build() {
 	
 	var ul = p.container.append("ul").attr( "id", "vis" )
 	
-	/*		/// DEBUG
+	/// DEBUG
 			.on( "click", function() { 
 			
 				d = d3.select(".active .active").datum()
@@ -244,17 +272,19 @@ function build() {
 				
 				d3.select( ".active .active" ).style( "background", "blue" );
 			
-			} );;	
+			} );
 			
-	*/
+	
 
 	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
-			
-	d3.select( "#" + p.containerID ).on( "mousewheel", function() {
-
-		$j( "#vis" ).trigger( "mousemove" );
-		
-	} );
+	
+	// IE
+	//$j( "#viewer_container" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
+	
+	d3.select( "#" + p.containerID )
+		.on( "mousewheel", behaviours.vis.mousewheel)
+		.on( "DOMMouseScroll", behaviours.vis.mousewheel ) // Firefox;
+	
 	
 	var li = ul.selectAll( "li" )
 		.data( paragraphs )
