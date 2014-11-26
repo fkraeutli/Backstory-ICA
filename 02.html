@@ -18,14 +18,45 @@
 		<div id="backstory">
 			
 			<div id="instructions">
+				
+				<div class="row">
+					<div class="column">
 						
-				<h2>Explore Topics</h2>
+						<h3>Context</h3>
+						
+						- wikipedia<br>
+						- constantly edited<br>
+						- usually only latest version accessed<br>
+						- revision history a reflection of how public knowledge and discussion around HIV/AIDS changes over time
+						
+					</div>
+					<div class="column">
+						
+						<h3>Data Acquisition</h3>
+						
+						- data is derived from more than 8'000 versions of the HIV/AIDS wikipedia article<br>
+						- filtered around three chosen keywords: condoms, viral load, safe sex<br>
+						- paragraphs that contain the keyword are extracted
+						
+					</div>
+					<div class="column">
+						
+						<h3>Usage</h3>
+						
+						- the paragraphs are positioned vertically according the time they have been written<br>
+						- move the mouse left and right to select a paragraph<br>
+						- scroll up and down to see how a particular paragraph has been changing over time
+	
+						
+					</div>
+				</div>
 				
 				<ul id="backstory_topics">
 					
-					<li data-topic="condoms" class="selected">Condoms</li>
-					<li data-topic="viralload">Viral Load</li>
-					<li data-topic="safesex">Safe Sex</li>
+					<li class="topic">Select Keyword:</li>
+					<li><a href="#condoms" data-topic="condoms">Condoms</a></li>
+					<li><a href="#viralload" data-topic="viralload">Viral Load</a></li>
+					<li><a href="#safesex" data-topic="safesex">Safe Sex</a></li>
 						
 				</ul>
 				
@@ -37,7 +68,6 @@
 			</div>
 
 		</div>
-		
 		
 	</body>
 	

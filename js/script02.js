@@ -28,22 +28,27 @@ $j( initialise );
 
 function initialise() {
 	
-	load();
+	load( window.location.hash.substr(1) || "condoms" );
 	
-	$j( "#backstory_topics li" ).click( function() { 
+	$j( "#backstory_topics a" ).click( function( e ) { 
 	
-		$j( "#backstory_topics li.selected" ).removeClass( "selected" );
-		$j( this ).addClass( "selected" );
-			
-		load( $j(this).attr( "data-topic" ) );
+		load( $j( this ).attr( "data-topic" ) );
 		
 	} );
+	
+	$j( "#viewer_container").css( "top", $j( "#instructions").outerHeight() );
+	
+	$j( "#backstory" ).scroll( function( e ) {
+		
+		$j( "#viewer_container").css( "top", $j( "#instructions").outerHeight() - Math.min( $j( "#backstory" ).scrollTop(), $j( "#instructions" ).outerHeight() ) );
+		
+	})
 	
 }
 
 function load( which ) {
 	
-	function initialise() {
+	function initLoad() {
 
 			$j( "#" + p.containerID + "_container" ).remove();
 			$j( "#" + p.viewerID ).html( "" );
@@ -53,6 +58,8 @@ function load( which ) {
 				which = "condoms";
 				
 			}
+			
+		
 			
 			d3.json( "data/" + which + ".json", function(d) {
 			
@@ -71,13 +78,16 @@ function load( which ) {
 		}
 
 	
+	$j( "#backstory_topics a.selected" ).removeClass( "selected" );
+	$j(  "#backstory_topics a[data-topic=" + which + "]" ).addClass( "selected" );
+			
 	if ( $j( "#" + p.containerID + "_container" ).size() ) {
 	
-		$j( "#" + p.containerID + "_container" ).fadeOut( 300, initialise )
+		$j( "#" + p.containerID + "_container" ).fadeOut( 300, initLoad )
 		
 	} else {
 		
-		initialise();
+		initLoad();
 		
 	}
 
