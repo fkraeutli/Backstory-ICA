@@ -24,7 +24,7 @@ p = {
 
 TEST_p = p;
 
-load( "safesex" );
+load();
 
 function load( which ) {
 	
