@@ -24,33 +24,64 @@ p = {
 
 TEST_p = p;
 
-load();
+$j( initialise );
+
+function initialise() {
+	
+	load();
+	
+	$j( "#backstory_topics li" ).click( function() { 
+	
+		$j( "#backstory_topics li.selected" ).removeClass( "selected" );
+		$j( this ).addClass( "selected" );
+			
+		load( $j(this).attr( "data-topic" ) );
+		
+	} );
+	
+}
 
 function load( which ) {
 	
-	$j( "#" + p.containerID + "_container" ).remove();
-	$j( "#" + p.viewerID ).html( "" );
+	function initialise() {
+
+			$j( "#" + p.containerID + "_container" ).remove();
+			$j( "#" + p.viewerID ).html( "" );
+			
+			if ( ! which ) {
+				
+				which = "condoms";
+				
+			}
+			
+			d3.json( "data/" + which + ".json", function(d) {
+			
+				dataset = d;
+				
+				dataset.forEach( function(d) {
+					
+					d.revision_id = parseInt( d.revision_id );
+					d.revision_timestamp = new Date( d.revision_timestamp );
+					
+				} );
+				
+				initDataset();
+					
+			} );
+		}
+
 	
-	if ( ! which ) {
+	if ( $j( "#" + p.containerID + "_container" ).size() ) {
+	
+		$j( "#" + p.containerID + "_container" ).fadeOut( 300, initialise )
 		
-		which = "condoms";
+	} else {
+		
+		initialise();
 		
 	}
+
 	
-	d3.json( "data/" + which + ".json", function(d) {
-	
-		dataset = d;
-		
-		dataset.forEach( function(d) {
-			
-			d.revision_id = parseInt( d.revision_id );
-			d.revision_timestamp = new Date( d.revision_timestamp );
-			
-		} );
-		
-		initDataset();
-			
-	} );
 	
 }
 
@@ -108,12 +139,16 @@ function initDataset() {
 	
 	p.container = d3.select( "#" + p.containerID )
 		.append("div")
-		.attr("id", p.containerID + "_container");
+		.attr("id", p.containerID + "_container")
+		.style( "display", "none");
+		
+	$j( "#" + p.containerID + "_container" ).fadeIn( 300 );	
 		
 	p.container.append( "div" )
 		.attr( "id", "time_indicator" )
+		.style( "display", "none" )
 	.append( "span" )
-		.attr( "class", "time" );
+		.attr( "class", "time" )
 	
 	p.container.style( "height", p.view.height + p.view.padding * 10 + "px" );
 	
@@ -127,58 +162,7 @@ function build() {
 		
 		vis: {
 			
-			mousemoveD3: function() {
-				
-				var current = d3.select( d3.event.toElement );
-				
-				if ( current.classed( "column" ) ) {
-	
-					d3.selectAll( ".column.active" ).classed( "active", false );
-					current.classed( "active", true );
-					
-										
-				}
-				
-				var y = $j( "#" + p.containerID ).scrollTop(),
-					found = false;	
-				
-				d3.selectAll( ".column.active li" ).each( function( d, i ) {
-					
-					if ( ! found ) {
-						
-						if ( d.top > y + p.view.padding * 2 ) {
-							
-							found = d3.select( this );
-							
-						}
-						
-					}
-					
-				} )
-				
-				
-				if ( found ) {
-					
-					var prev = d3.select( ".paragraph.active" );
-					
-					d3.selectAll( ".paragraph.active" ).classed( "active", false );
-					found.classed( "active", true );
-					
-					if ( ! prev.empty()  && found.attr( "id" ) != prev.attr( "id" ) ) {
-						
-						d3.select( "#time_indicator")
-							.style( "top", found.datum().top + "px" )
-						.select( ".time" )
-							.html( found.datum().timestamp.getFullYear() + "/" + ( found.datum().timestamp.getMonth() + 1 ) + "/" + found.datum().timestamp.getDate() + " " + found.datum().timestamp.getHours() + ":" + found.datum().timestamp.getMinutes() );
-							
-						updateViewer( found );
-						
-					} 
-				}
-				
-			},
-			
-			mousemoveJQ: function( e ) {
+			mousemove: function( e ) {
 				
 				var current = $j( e.target );
 				
@@ -229,6 +213,7 @@ function build() {
 
 						d3.select( "#time_indicator")
 							.style( "top", found.datum().top + "px" )
+							.style( "display", "block" )
 						.select( ".time" )
 							.html( found.datum().timestamp.getFullYear() + "/" + ( found.datum().timestamp.getMonth() + 1 ) + "/" + found.datum().timestamp.getDate() + " " + found.datum().timestamp.getHours() + ":" + found.datum().timestamp.getMinutes() );
 							
@@ -260,7 +245,7 @@ function build() {
 	
 	var ul = p.container.append("ul").attr( "id", "vis" )
 	
-	/// DEBUG
+	 /* DEBUG
 			.on( "click", function() { 
 			
 				d = d3.select(".active .active").datum()
@@ -274,13 +259,13 @@ function build() {
 				d3.select( ".active .active" ).style( "background", "blue" );
 			
 			} );
-			
+	*/		
 	
 
-	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
+	$j( "#vis" ).bind( "mousemove", behaviours.vis.mousemove );
 	
 	// IE
-	//$j( "#viewer_container" ).bind( "mousemove", behaviours.vis.mousemoveJQ );
+	//$j( "#viewer_container" ).bind( "mousemove", behaviours.vis.mousemove );
 	
 	d3.select( "#" + p.containerID )
 		.on( "mousewheel", behaviours.vis.mousewheel)

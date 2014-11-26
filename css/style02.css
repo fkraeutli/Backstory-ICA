@@ -27,7 +27,7 @@ body {
   /* 		font-family: "Times New Roman", times, serif; */
 
   margin: 0;
-  padding: 0 100px;
+  padding: 0 5%;
   height: 100%;
   /* 		cursor: none; */
 
@@ -170,6 +170,24 @@ body {
 }
 #backstory #viewer_container #viewer_content em {
   font-style: normal;
+  color: #ed1c24;
+}
+#instructions {
+  margin: 0 5%;
+}
+#instructions #backstory_topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#instructions #backstory_topics li {
+  cursor: pointer;
+  font-size: 1.5em;
+  float: left;
+  margin-right: 2em;
+}
+#instructions #backstory_topics li.selected {
   color: #ed1c24;
 }
 /* --- Mixins --- */
