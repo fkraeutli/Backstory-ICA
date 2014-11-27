@@ -19,10 +19,6 @@ body {
 #backstory #backstory_container {
   position: relative;
 }
-#backstory ul {
-  margin: 0;
-  padding: 0;
-}
 #backstory ul#vis {
   /* 		font-family: "Times New Roman", times, serif; */
 
@@ -31,6 +27,10 @@ body {
   height: 100%;
   /* 		cursor: none; */
 
+}
+#backstory ul#vis ul {
+  margin: 0;
+  padding: 0;
 }
 #backstory ul#vis > li {
   list-style: none;
@@ -172,16 +172,56 @@ body {
   font-style: normal;
   color: #ed1c24;
 }
-#instructions {
+#backstory_topics {
+  list-style: none;
+  padding: 0;
+  overflow: hidden;
   margin: 2em 5%;
   padding-bottom: 2em;
   border-bottom: 3px solid black;
+}
+#backstory_topics li {
+  font-size: 1.5em;
+  float: left;
+  margin-right: 2em;
+}
+#backstory_topics li a {
+  color: black;
+  text-decoration: none;
+}
+#backstory_topics li a.selected {
+  color: #ed1c24;
+}
+#instructions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 100;
+  text-align: center;
+}
+#instructions #close_button {
+  cursor: pointer;
+  font-size: 2em;
+  margin: auto;
+  color: black;
+}
+#instructions #close_button:hover {
+  color: #ed1c24;
 }
 #instructions ul,
 #instructions li {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+#instructions .container {
+  border: 3px solid #1e1e1e;
+  margin: 24px;
+  margin-top: 48px;
+  text-align: left;
 }
 #instructions .column {
   float: left;
@@ -190,30 +230,13 @@ body {
 }
 #instructions .row {
   overflow: hidden;
+  margin: 2em 5%;
   margin-bottom: 3em;
 }
 #instructions h2.topic {
   float: left;
   margin: 0;
   margin-right: 2em;
-}
-#instructions #backstory_topics {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-#instructions #backstory_topics li {
-  font-size: 1.5em;
-  float: left;
-  margin-right: 2em;
-}
-#instructions #backstory_topics li a {
-  color: black;
-  text-decoration: none;
-}
-#instructions #backstory_topics li a.selected {
-  color: #ed1c24;
 }
 /* --- Mixins --- */
 .hideText {

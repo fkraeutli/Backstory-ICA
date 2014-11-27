@@ -28,6 +28,12 @@ $j( initialise );
 
 function initialise() {
 	
+	$j( "#close_button" ).click( function() {
+		
+		$j( "#instructions" ).fadeOut();
+		
+	} )
+	
 	load( window.location.hash.substr(1) || "condoms" );
 	
 	$j( "#backstory_topics a" ).click( function( e ) { 
@@ -36,11 +42,11 @@ function initialise() {
 		
 	} );
 	
-	$j( "#viewer_container").css( "top", $j( "#instructions").outerHeight() );
+	$j( "#viewer_container").css( "top", $j( "#backstory_topics").outerHeight() );
 	
 	$j( "#backstory" ).scroll( function( e ) {
 		
-		$j( "#viewer_container").css( "top", $j( "#instructions").outerHeight() - Math.min( $j( "#backstory" ).scrollTop(), $j( "#instructions" ).outerHeight() ) );
+		$j( "#viewer_container").css( "top", $j( "#backstory_topics").outerHeight() - Math.min( $j( "#backstory" ).scrollTop(), $j( "#backstory_topics" ).outerHeight() ) );
 		
 	})
 	
