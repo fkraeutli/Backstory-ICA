@@ -10,6 +10,12 @@ html {
 body {
   margin: 0;
   padding: 0;
+  font-size: 16px;
+}
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  body {
+    font-size: 13px;
+  }
 }
 #backstory {
   height: 100%;
@@ -207,6 +213,7 @@ body {
   font-size: 2em;
   margin: auto;
   color: black;
+  padding-bottom: 2em;
 }
 #instructions #close_button:hover {
   color: #ed1c24;
@@ -230,8 +237,10 @@ body {
 }
 #instructions .row {
   overflow: hidden;
-  margin: 2em 5%;
-  margin-bottom: 3em;
+  margin: 1em 5%;
+}
+#instructions .row:last-child {
+  margin-bottom: 2em;
 }
 #instructions h2.topic {
   float: left;
